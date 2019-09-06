@@ -1,0 +1,37 @@
+#create a new directory, called ~/Documents/HybridCryptosystems, and change into it
+#create a new file in this directory, and call it dirty_little_secret. save a message.
+##generate an RSA keypair through the following steps.
+Create a 2048 bit RSA private/public keypair with:
+openssl genrsa -des3 -out private.pem 2048
+#Extract the public key from this keypair with:
+openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+catpublic.pem
+#ensure the file says BEGIN PUBLIC KEY at the top, and END PUBLIC KEY at the bottom.
+#Rename your partner's public key to: partners_public.pem
+#After renaming partner's key, move it into ~/Documents/HybridCryptosystems
+#To generate a symmetric key and IV, run the following:
+openssl enc -aes-256-cbc -nosalt -k password -P | tee secrets
+#Open up the file secrets. You'll see two lines. The first has my key, and the second, my iv.
+#Create a file called symmetrickey.dat. 
+#Copy and paste your key from secrets into symmetrickey.dat. Only copy the string to the right of the equals sign.
+#Create a file called iv.dat. 
+#Copy and paste the IV from secrets into iv.dat. As before, only copy the string to the right of the equals sign.
+# To encrypt message, run:
+openssl enc -nosalt -aes-256-cbc -in dirty_little_secret.txt
+-out dirty_little_secret.enc -base64 -K <key> -iv <IV>
+#In place of <key> and <IV>, copy and paste the key from symmetrickey.dat and iv.dat files, respectively.
+#The -base64 option ensures you can open the encrypted file in a text editor and see letters, instead of wingding.
+#This creates an encrypted version of your message in the file dirty_little_secret.enc.
+#Check to make sure everything went well by running: 
+cat dirty_little_secret.enc
+#Send symmetrickey.dat.enc, iv.dat, and dirty_little_secret.enc to partner.
+#Rename partner files to: partners_dirty_little_secret.enc, partners_symmetric_key.enc, and partners_iv.dat.
+#Move into ~/Documents/HybridCryptosytems.
+#Steps to decrypt the data are:
+#Use your partner's public key to decrypt partners_symmetric_key.enc.
+#Use the decrypted symmetric key to decrypt partners_dirty_little_secret.enc.
+#To decrypt the symmetric key, run the following commands.
+openssl pkeyutl -decrypt -in partners_symmetric_key.enc -inkey private.pem -out partners_symmetric_key.pem
+#To use the symmetric key to decrypt their secret message, run:
+openssl enc -aes-256-cbc -d -nosalt -in partners_dirty_little_secret.enc -base64 -K <partner's symmetric key> -iv <partner's IV>
+#Copy and paste partner's symmetric key where the <partner's symmetric key> placeholder is, and your partner's IV where <partner's IV> appears.
