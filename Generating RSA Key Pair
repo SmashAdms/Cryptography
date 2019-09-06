@@ -1,0 +1,11 @@
+#create a new directory, called ~/Documents/HybridCryptosystems, and change into it
+#create a new file in this directory, and call it dirty_little_secret. save a message.
+##generate an RSA keypair through the following steps.
+Create a 2048 bit RSA private/public keypair with:
+openssl genrsa -des3 -out private.pem 2048
+#Extract the public key from this keypair with:
+openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+catpublic.pem
+#ensure the file says BEGIN PUBLIC KEY at the top, and END PUBLIC KEY at the bottom.
+#Rename your partner's public key to: partners_public.pem
+#After renaming partner's key, move it into ~/Documents/HybridCryptosystems
